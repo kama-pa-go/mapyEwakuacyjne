@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}Moje Trasy{% endblock %}
+
+{% block content %}
+  <h2>Moje Trasy</h2>
+
+  {% if trasy %}
+    <ul>
+      {% for trasa in trasy %}
+        <li>
+          <strong><a href="{% url 'mapy:edytuj_trase' trasa.id %}">{{ trasa.nazwa }}</a></strong>
+          (na obrazie: <em>{{ trasa.obraz_tla.nazwa }}</em>)
+          <br>
+          <small>Ostatnia modyfikacja: {{ trasa.data_modyfikacji|date:"Y-m-d H:i" }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Nie utworzyłeś jeszcze żadnych tras.</p>
+  {% endif %}
+
+  <p style="margin-top: 20px;">
+    <a href="{% url 'mapy:lista_obrazow_tla' %}" class="button">Stwórz nową trasę</a>
+  </p>
+
+{% endblock %}

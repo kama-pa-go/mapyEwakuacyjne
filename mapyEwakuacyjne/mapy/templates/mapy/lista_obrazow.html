@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Wybierz Obraz Tła{% endblock %}
+
+{% block content %}
+  <h2>Wybierz obraz tła dla nowej trasy</h2>
+
+  {% if obrazy %}
+    <div class="lista-obrazow"> {# TODO: dodać clasę w tailwindzie #}
+      {% for obraz in obrazy %}
+        <div class="obraz-item">
+          <h3>{{ obraz.nazwa }}</h3>
+          {% if obraz.obrazek %}
+            {# miniaturka obrazu #}
+            <a href="{% url 'mapy:stworz_trase' obraz.id %}">
+              <img src="{{ obraz.obrazek.url }}" alt="Miniatura {{ obraz.nazwa }}" style="max-width: 200px; height: auto; border: 1px solid #ccc; margin-bottom: 10px;">
+            </a>
+          {% endif %}
+          {% if obraz.opis %}
+            <p>{{ obraz.opis }}</p>
+          {% endif %}
+          {# link do tworzenia trasy na tym obrazie #}
+          <p><a href="{% url 'mapy:stworz_trase' obraz.id %}" class="button">Utwórz trasę na tym obrazie</a></p>
+        </div>
+        <hr>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Administrator nie dodał jeszcze żadnych obrazów tła.</p>
+  {% endif %}
+{% endblock %}

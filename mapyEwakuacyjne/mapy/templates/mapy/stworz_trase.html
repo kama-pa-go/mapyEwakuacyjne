@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Utwórz nową trasę{% endblock %}
+
+{% block content %}
+
+  <h2>Tworzenie nowej trasy na obrazie: {{ obraz_tla.nazwa }}</h2>
+
+  
+  {% if obraz_tla.obrazek %}
+    <img src="{{ obraz_tla.obrazek.url }}" alt="{{ obraz_tla.nazwa }}" style="max-width: 300px; height: auto; margin-bottom: 20px; border: 1px solid #ccc;">
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %} 
+
+    <p>Wprowadź nazwę dla nowej trasy:</p>
+    {{ form.as_p }} 
+    <button type="submit">Stwórz trasę i przejdź do edycji</button>
+  </form>
+
+  <p style="margin-top: 20px;">
+    <a href="{% url 'mapy:lista_obrazow_tla' %}">Anuluj i wróć do listy obrazów</a>
+  </p>
+
+{% endblock %}

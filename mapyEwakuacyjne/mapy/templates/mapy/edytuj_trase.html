@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edycja Trasy: {{ trasa.nazwa }}{% endblock %}
+
+{% block content %}
+  <h2>Edycja trasy: {{ trasa.nazwa }} <small>(na obrazie: {{ trasa.obraz_tla.nazwa }})</small></h2>
+
+  <div class="obraz-container" style="margin-bottom: 20px; max-width: 800px;">
+    {# Używamy nowej zmiennej kontekstu 'display_image_url' #}
+    <img id="obrazTrasy" src="{{ display_image_url }}" alt="Trasa {{ trasa.nazwa }} na obrazie {{ trasa.obraz_tla.nazwa }}" style="max-width: 100%; height: auto; display: block;">
+    {% if not obraz_wygenerowany %}
+      <p style="color: red;">Nie udało się wygenerować obrazu z trasą. Wyświetlono oryginalne tło.</p>
+    {% endif %}
+  </div>
+
+  {# Sekcja zarządzania punktami #}
+  <div class="punkty-zarzadzanie">
+    <h3>Punkty trasy (ilość: {{ punkty.count }})</h3>
+    {% if punkty %}
+      <ol>
+        {% for punkt in punkty %}
+          <li>
+            (X: {{ punkt.x }}, Y: {{ punkt.y }}) - punkt numer: {{ punkt.kolejnosc }}
+            <form action="{% url 'mapy:usun_punkt' punkt.id %}" method="post" style="display: inline; margin-left: 10px;">
+              {% csrf_token %}
+              <button type="submit" class="button-small button-danger">Usuń</button>
+            </form>
+          </li>
+        {% endfor %}
+      </ol>
+    {% else %}
+      <p>Ta trasa nie ma jeszcze żadnych punktów.</p>
+    {% endif %}
+    <hr>
+    <h3>Dodaj nowy punkt</h3>
+    <form method="post">
+      {% csrf_token %}
+      {{ punkt_form.as_p }}
+      <button type="submit" name="dodaj_punkt">Dodaj punkt</button>
+    </form>
+  </div>
+
+  <p style="margin-top: 30px;">
+    <a href="{% url 'mapy:lista_tras_uzytkownika' %}">Powrót do listy moich tras</a>
+  </p>
+
+{% endblock %}
