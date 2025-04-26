@@ -1,0 +1,105 @@
+{% load static %}
+{% load tailwind_cli %}
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}Moja Aplikacja Map{% endblock %}</title>
+
+    {% tailwind_css %} {# Wstaw CSS Tailwind #}
+
+    <style>
+        body {
+            background-image: url("/media/obrazki/tloSzlaki.jpg"); 
+            background-position:  center 30;
+        }
+
+        button{
+            color: #0b0f1d;
+            background-color: #B49C90;
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding: 0.625rem 1.25rem; 
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #c49b6c; 
+            transition-duration: 100ms;
+        }
+
+        .red-yellow-button {
+            color: #0b0f1d;
+            background-image: linear-gradient(to right, #78350f, #c49b6c, #B49C90);
+            font-weight: 500;
+            font-size: 0.875rem;
+            line-height: 1.25rem;
+            padding: 0.625rem 1.25rem; 
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .red-yellow-button:hover {
+            background-image: linear-gradient(to left, #c49b6c, #B49C90, #B49C90); 
+            transition-duration: 200ms;
+        }
+
+        .red-yellow-button:focus {
+            outline: none; 
+            box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.5);
+        }
+
+        .dark .red-yellow-button:focus {
+            box-shadow: 0 0 0 4px rgba(248, 113, 113, 0.7);
+        }
+    </style>
+    
+</head>
+<body>
+    <header class="flex flex-col py-4 m-4 bg-amber-50/50 items-center justify-center rounded-lg shadow-md">
+        <nav>
+            <h1 class="items-center text-center"><a href="{% url 'mapy:index' %}" class="text-3xl p-4 hover-bg-amber-50">Edytor Tras</a></h1> {# Link do strony głównej aplikacji #}
+            <div class="flex p-4 m-4 items-center justify-betwee w-full">
+                <button class="red-yellow-button rounded-full"><a href="{% url 'mapy:lista_obrazow_tla' %}">Wybierz Obraz Tła</a></button>
+
+                {# Linki zależne od stanu zalogowania użytkownika #}
+                {% if user.is_authenticated %}
+                    <button class="bg-stone-50/50 bg-50 rounded-full cursor-pointer ml-4 py-2 px-4"><a href="{% url 'mapy:lista_tras_uzytkownika' %}">Moje Trasy</a></button>
+                    <h3 class="py-2 px-4">Witaj, {{ user.username }}!</h3>
+                    <div>
+                        <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: inline;">
+                             {% csrf_token %}
+                             <button type="submit" class="red-yellow-button rounded-full">Wyloguj</button>
+                         </form>
+                    </div>
+                {% else %}
+                    <button class="red-yellow-button rounded-full"><a href="{% url 'login' %}">Zaloguj</a></button>
+                    <button class="red-yellow-button rounded-full"><a href="{% url 'rejestracja' %}">Zarejestruj</a></button>
+                {% endif %}
+            </div>
+        </nav>
+    </header>
+
+    <main class="flex flex-col py-10 m-4 bg-stone-50/50 gap-4">
+        {% block content %}
+            <p>Witaj w aplikacji!</p>
+        {% endblock %}
+    </main>
+
+    
+    <footer class= "bg-amber-50/50 flex items-center justify-center py-10 overline m-4">
+        <p class="text-center">&copy; {% now "Y" %} Kamila Godlewska</p>
+    </footer>
+
+</body>
+</html>
